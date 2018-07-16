@@ -48,6 +48,8 @@ backend_env <- R6Class(
                            keyring),
     delete = function(service, username = NULL, keyring = NULL)
       b_env_delete(self, private, service, username, keyring),
+    list = function(service = NULL, keyring = NULL)
+      b_env_list(self, private, service, keyring),
 
     docs = function() {
       modifyList(super$docs(), list(
@@ -80,7 +82,8 @@ b_env_get <- function(self, private, service, username, keyring) {
 b_env_set <- function(self, private, service, username, keyring) {
   warn_for_keyring(keyring)
   password <- get_pass()
-  b_env_set_with_value(self, private, service, username, password)
+  b_env_set_with_value(self, private, service, username, password,
+                       keyring = NULL)
   invisible(self)
 }
 
@@ -105,4 +108,21 @@ b_env_to_var <- function(self, private, service, username, keyring) {
   } else {
     paste0(service, ":", username)
   }
+}
+
+b_env_list <- function(self, private, service, keyring) {
+  if (is.null(service))
+    stop("'service' is required for 'env' backend.")
+  
+  keys <- gsub(
+    paste(service, ":", sep = ""),
+    "",
+    Filter(function(e) str_starts_with(e, service), names(Sys.getenv()))
+  )
+  
+  data.frame(
+    service = rep(service, length(keys)),
+    username = keys,
+    stringsAsFactors = FALSE
+  )
 }
