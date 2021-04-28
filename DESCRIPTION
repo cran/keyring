@@ -1,9 +1,10 @@
 Package: keyring
 Title: Access the System Credential Store from R
-Version: 1.1.0
+Version: 1.2.0
 Authors@R: 
     c(person(given = "Gábor", family = "Csárdi", role = c("aut", "cre"),
              email = "csardi.gabor@gmail.com"),
+      person(given = "Alec", family = "Wong", role = "ctb"),
       person("RStudio", role = "cph"))
 Description: Platform independent 'API' to access the operating system's
     credential store. Currently supports: 'Keychain' on 'macOS', Credential
@@ -11,11 +12,11 @@ Description: Platform independent 'API' to access the operating system's
     platform independent store implemented with environment variables.
     Additional storage back-ends can be added easily.
 License: MIT + file LICENSE
-LazyData: true
-URL: https://github.com/r-lib/keyring#readme
+URL: https://r-lib.github.io/keyring/index.html,
+        https://github.com/r-lib/keyring#readme
 BugReports: https://github.com/r-lib/keyring/issues
-RoxygenNote: 6.0.1
-Imports: assertthat, getPass, openssl, R6, utils, sodium, yaml,
+RoxygenNote: 7.1.1.9001
+Imports: assertthat, askpass, openssl, R6, utils, sodium, yaml,
         filelock, rappdirs, tools
 Suggests: callr, covr, mockery, testthat, withr
 Encoding: UTF-8
@@ -26,9 +27,10 @@ Collate: 'api.R' 'assertions.R' 'backend-class.R' 'backend-env.R'
         'backend-wincred.R' 'default_backend.R' 'package.R' 'pass.R'
         'utils.R'
 NeedsCompilation: yes
-Packaged: 2018-07-16 11:55:49 UTC; gaborcsardi
+Packaged: 2021-04-28 14:41:01 UTC; gaborcsardi
 Author: Gábor Csárdi [aut, cre],
+  Alec Wong [ctb],
   RStudio [cph]
 Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
 Repository: CRAN
-Date/Publication: 2018-07-16 12:20:03 UTC
+Date/Publication: 2021-04-28 15:20:06 UTC

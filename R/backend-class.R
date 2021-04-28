@@ -44,7 +44,8 @@ abstract_method <- function() {
 #' * `service` String, the name of a service. This is used to find the
 #'   secret later.
 #' * `username` String, the username associated with a secret. It can be
-#'   `NULL`, if no username belongs to the secret.
+#'   `NULL`, if no username belongs to the secret. It uses the value of
+#'   the `keyring_username`, if set.
 #' * `keyring` String, the name of the keyring to work with. This only makes
 #'   sense if the platform supports multiple keyrings. `NULL` selects the
 #'   default (and maybe only) keyring.
@@ -149,7 +150,7 @@ backend <- R6Class(
 #'    a confirmation dialog.
 #' * `keyring_lock()` locks a keyring.
 #' * `keyring_unlock()` unlocks a keyring.
-#' * `keyring_is_locked() checks whether a keyring is locked.
+#' * `keyring_is_locked()` checks whether a keyring is locked.
 #' * `keyring_default()` returns the default keyring.
 #' * `keyring_set_default()` sets the default keyring.
 #'

@@ -1,8 +1,0 @@
-keyring_info:
-  keyring_version: 1.1.0
-  nonce: 75e467bc064a2132a754d3bff25cf560f6a89321a8182d7e
-  integrity_check: 872f47a8d8f63d0ef81dcb144df48807d5b6c8496f2aaca5030c88250f608a4501e39554e0a9
-items:
-- service_name: R-keyring-test-service-mbkKTVGPYjNZdoq
-  user_name: CyjysIbGqt
-  secret: 00a1fe199bc81cbf8a846f56198cf74bd5b099717a6dafa42a4ea9652d7daf6f

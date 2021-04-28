@@ -40,3 +40,43 @@ URLencode <- function(URL) {
   if (length(bad)) x[bad] <- vapply(x[bad], tr, character(1))
   paste(x, collapse = "")
 }
+
+get_encoding_opt <- function() {
+  chk <- function(x) is.character(x) && length(x) == 1 && !is.na(x)
+
+  enc <- getOption("keyring.encoding_windows")
+  if (!is.null(enc) && !chk(enc)) {
+    stop("Invalid 'keyring.encoding_windows' option, must be an ",
+         "encoding name or 'auto'")
+  }
+
+  enc <- enc %||% Sys.getenv("KEYRING_ENCODING_WINDOWS", "auto")
+
+  # Confirm valid encoding. Suggest closest match if not found.
+  if (enc != "auto" & !(tolower(enc) %in% tolower(iconvlist()))) {
+    icl <- iconvlist()
+    closest <- icl[which.min(utils::adist(enc, icl))]
+    stop(sprintf(
+      "Encoding not found in iconvlist(). Did you mean %s?",
+      closest
+    ))
+  }
+  enc
+}
+
+is_interactive <- function() {
+  opt <- getOption("rlib_interactive")
+  if (isTRUE(opt)) {
+    TRUE
+  } else if (identical(opt, FALSE)) {
+      FALSE
+  } else if (tolower(getOption("knitr.in.progress", "false")) == "true") {
+    FALSE
+  } else if (tolower(getOption("rstudio.notebook.executing", "false")) == "true") {
+    FALSE
+  } else if (identical(Sys.getenv("TESTTHAT"), "true")) {
+    FALSE
+  } else {
+    interactive()
+  }
+}

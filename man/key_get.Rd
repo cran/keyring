@@ -8,7 +8,7 @@
 \alias{key_set_with_raw_value}
 \alias{key_delete}
 \alias{key_list}
-\title{Query, set, delete list keys in a keyring}
+\title{Operations on keys}
 \usage{
 key_get(service, username = NULL, keyring = NULL)
 
@@ -16,11 +16,14 @@ key_get_raw(service, username = NULL, keyring = NULL)
 
 key_set(service, username = NULL, keyring = NULL)
 
-key_set_with_value(service, username = NULL, password = NULL,
-  keyring = NULL)
+key_set_with_value(service, username = NULL, password = NULL, keyring = NULL)
 
-key_set_with_raw_value(service, username = NULL, password = NULL,
-  keyring = NULL)
+key_set_with_raw_value(
+  service,
+  username = NULL,
+  password = NULL,
+  keyring = NULL
+)
 
 key_delete(service, username = NULL, keyring = NULL)
 
@@ -74,6 +77,20 @@ vector.
 
 \code{key_list} lists all keys of a keyring, or the keys for a certain
 service (if \code{service} is not \code{NULL}).
+\subsection{Encodings}{
+
+On Windows, if required, an encoding can be specified using either
+an R option (\code{keyring.encoding_windows}) or environment variable
+(\code{KEYRING_ENCODING_WINDOWS}). This will be applied when both
+getting and setting keys. The option takes precedence over the
+environment variable, if both are set.
+
+This is reserved primarily for compatibility with keys set with
+other software, such as Python's implementation of keyring. For a
+list of encodings, use \code{\link[=iconvlist]{iconvlist()}}, although it should be noted
+that not \emph{every} encoding can be properly converted, even for
+trivial cases. For best results, use UTF-8 if you can.
+}
 }
 \examples{
 # These examples use the default keyring, and they are interactive,
@@ -91,5 +108,27 @@ key_set_with_value("R-keyring-test-service", "donaldduck",
 key_get("R-keyring-test-service", "donaldduck")
 if (has_keyring_support()) key_list(service = "R-keyring-test-service")
 key_delete("R-keyring-test-service", "donaldduck")
+
+## This is interactive using backend_file
+## Set variables to be used in keyring
+kr_name <- "my_keyring"
+kr_service <- "my_database"
+kr_username <- "my_username"
+
+## Create a keyring and add an entry using the variables above
+kb <- keyring::backend_file$new()
+## Prompt for the keyring password, used to unlock keyring
+kb$keyring_create(kr_name)
+## Prompt for the secret/password to be stored in the keyring
+kb$set(kr_service, username=kr_username, keyring=kr_name)
+# Lock the keyring
+kb$keyring_lock(kr_name)
+
+## The keyring file is stored at ~/.config/r-keyring/ on Linux
+
+## Output the stored password
+keyring::backend_file$new()$get(service = kr_service,
+  user = kr_username,
+  keyring = kr_name)
 }
 }

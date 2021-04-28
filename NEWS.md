@@ -1,5 +1,20 @@
 
-# 1.1.0
+# keyring 1.2.0
+
+* It is now possible to specify the encoding of secrets on Windows
+  (#88, @awong234).
+
+* The `get_raw()` method of the Secret Service backend works now (#87).
+
+* Now the file backend is selected by default on Unix systems if
+  Secret Service is not available or does not work (#95, @nwstephens).
+
+* The file backend now works with keys that do not have a username.
+
+* All backends use the value of the `keyring_username` option, if set,
+  as the default username (#60).
+
+# keyring 1.1.0
 
 * File based backend (#53, @nbenn).
 
@@ -25,6 +40,6 @@
 * Windows: fix `list()` when some secrets have no `:` at all
   (these were probably set externally) (#44).
 
-# 1.0.0
+# keyring 1.0.0
 
 First public release.

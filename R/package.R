@@ -1,5 +1,5 @@
 
-#' Access the System Credential Store from R
+#' About the keyring package
 #'
 #' Platform independent API to many system credential store
 #' implementations. Currently supported:
@@ -52,7 +52,5 @@
 #' You only need to explicitly deal with keyrings and the `keyring_*`
 #' functions if you want to use a different keyring.
 #'
-#' @docType package
-#' @useDynLib keyring, .registration = TRUE, .fixes = "c_"
-#' @name keyring
-NULL
+#' @useDynLib keyring, .registration = TRUE
+"_PACKAGE"
