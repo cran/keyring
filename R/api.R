@@ -50,6 +50,8 @@
 #' @param keyring For systems that support multiple keyrings, specify
 #'   the name of the keyring to use here. If `NULL`, then the default
 #'   keyring is used. See also [has_keyring_support()].
+#' @param prompt The character string displayed when requesting the secret
+#'
 #' @return `key_get` returns a character scalar, the password or other
 #'   confidential information that was stored in the key.
 #'
@@ -115,10 +117,11 @@ key_get_raw <- function(service, username = NULL, keyring = NULL) {
 #' @export
 #' @rdname key_get
 
-key_set <- function(service, username = NULL, keyring = NULL) {
+key_set <- function(service, username = NULL, keyring = NULL,
+                    prompt = "Password: ") {
   assert_that(is_non_empty_string(service))
   assert_that(is_string_or_null(username))
-  default_backend()$set(service, username, keyring = keyring)
+  default_backend()$set(service, username, keyring = keyring, prompt = prompt)
 }
 
 #' @export
@@ -201,8 +204,8 @@ key_list <- function(service = NULL, keyring = NULL) {
 #' @param keyring The name of the keyring to create or to operate on.
 #'   For functions other than `keyring_create`, it can also be `NULL` to
 #'   select the default keyring.
-#' @param password The password to unlock the keyring. If not specified
-#'   or `NULL`, it will be read from the console.
+#' @param password The initial password or the password to unlock the
+#'   keyring. If not specified or `NULL`, it will be read from the console.
 #'
 #' @export
 #' @examples
@@ -228,9 +231,12 @@ has_keyring_support <- function() {
 #' @export
 #' @rdname has_keyring_support
 
-keyring_create <- function(keyring) {
-  assert_that(is_string(keyring))
-  default_backend()$keyring_create(keyring)
+keyring_create <- function(keyring, password = NULL) {
+  assert_that(
+    is_string(keyring),
+    is_string_or_null(password)
+  )
+  default_backend()$keyring_create(keyring, password)
 }
 
 #' @export

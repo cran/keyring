@@ -30,8 +30,9 @@ backend_file <- R6Class(
       b_file_get(self, private, service, username, keyring),
     get_raw = function(service, username = NULL, keyring = NULL)
       b_file_get_raw(self, private, service, username, keyring),
-    set = function(service, username = NULL, keyring = NULL)
-      b_file_set(self, private, service, username, keyring),
+    set = function(service, username = NULL, keyring = NULL,
+                   prompt = NULL)
+      b_file_set(self, private, service, username, keyring, prompt),
     set_with_value = function(service, username = NULL, password = NULL,
       keyring = NULL)
       b_file_set_with_value(self, private, service, username, password,
@@ -136,14 +137,29 @@ b_file_get <- function(self, private, service, username, keyring) {
   )
 }
 
-b_file_set <- function(self, private, service, username, keyring) {
-
-  private$keyring_autocreate(keyring)
+b_file_set <- function(self, private, service, username, keyring,
+                       prompt) {
 
   username <- username %||% getOption("keyring_username")
-  if (self$keyring_is_locked(keyring)) self$keyring_unlock(keyring)
 
-  password <- get_pass()
+  keyring <- keyring %||% private$keyring
+  file <- private$keyring_file(keyring)
+  ex <- file.exists(file)
+
+  # We use a different prompt in this case, to give a heads up
+  prompt <- prompt %||% if (!ex && interactive()) {
+    paste0(
+      "Note: the specified keyring does not exist, you'll have to ",
+      "create it in the next step. Key password: "
+    )
+  } else {
+    "Password: "
+  }
+
+  password <- get_pass(prompt)
+  if (is.null(password)) stop("Aborted setting keyring key")
+
+  private$keyring_autocreate()
 
   self$set_with_value(service, username, password, keyring)
 
@@ -264,7 +280,11 @@ b_file_keyring_delete <- function(self, private, keyring) {
 }
 
 b_file_keyring_lock <- function(self, private, keyring) {
-  private$keyring_autocreate(keyring)
+  keyring <- keyring %||% private$keyring
+  file <- private$keyring_file(keyring)
+  if (!file.exists(file)) {
+    stop("The '", keyring, "' keyring does not exists, create it first!")
+  }
   private$unset_keyring_pass(keyring)
   invisible(self)
 }
@@ -353,6 +373,7 @@ b_file_keyring_set_default <- function(self, private, keyring) {
 
 b__file_keyring_create_direct <- function(self, private, keyring, password, prompt) {
 
+  check_for_libsodium()
   keyring <- keyring %||% private$keyring
   prompt <- prompt %||% "Keyring password: "
   file_name <- private$keyring_file(keyring)
@@ -363,6 +384,7 @@ b__file_keyring_create_direct <- function(self, private, keyring, password, prom
   }
 
   password <- password %||% get_pass(prompt)
+  if (is.null(password)) stop("Aborted creating keyring")
 
   ## File need to exist for $set_keyring_pass() ...
   dir.create(dirname(file_name), recursive = TRUE, showWarnings = FALSE)
@@ -390,6 +412,7 @@ b__file_keyring_file <- function(self, private, keyring) {
 
 b__file_keyring_read_file <- function(self, private, keyring) {
 
+  check_for_libsodium()
   keyring <- keyring %||% private$keyring
   file_name <- private$keyring_file(keyring)
 
@@ -417,6 +440,7 @@ b__file_keyring_read_file <- function(self, private, keyring) {
 b__file_keyring_write_file <- function(self, private, keyring, nonce, items,
   key) {
 
+  check_for_libsodium()
   keyring <- keyring %||% private$keyring
   file_name <- private$keyring_file(keyring)
   nonce <- nonce %||% private$get_cache(keyring)$nonce
@@ -474,7 +498,9 @@ b__file_is_set_keyring_pass <- function(self, private, keyring) {
 
 b__file_set_keyring_pass <- function(self, private, key, keyring) {
 
+  check_for_libsodium()
   key <- key %||% get_pass("Keyring password: ")
+  if (is.null(key)) stop("Aborted setting keyring password")
   assert_that(is_string(key))
   key <- sodium::hash(charToRaw(key))
 
@@ -529,6 +555,7 @@ b__file_get_cache <- function(self, private, keyring) {
 
 b_file_secret_encrypt <- function(secret, nonce, key) {
 
+  check_for_libsodium()
   res <- sodium::data_encrypt(
     charToRaw(secret),
     key,
@@ -540,6 +567,7 @@ b_file_secret_encrypt <- function(secret, nonce, key) {
 
 b_file_secret_decrypt <- function(secret, nonce, key) {
 
+  check_for_libsodium()
   rawToChar(
     sodium::data_decrypt(
       sodium::hex2bin(b_file_merge_string(secret)),
@@ -629,4 +657,43 @@ with_lock <- function(file, expr) {
   if (is.null(l)) stop("Cannot lock keyring file")
   on.exit(filelock::unlock(l), add = TRUE)
   expr
+}
+
+check_for_libsodium <- function() {
+  if ("sodium" %in% loadedNamespaces()) return()
+
+  tryCatch(
+    find.package("sodium"),
+    error = function(err) {
+      stop(
+        "The 'file' keyring backend needs the sodium package, ",
+        "please install it"
+      )
+    }
+  )
+
+  tryCatch(
+    loadNamespace("sodium"),
+    error = function(err) {
+      if (Sys.info()[["sysname"]] == "Linux") {
+        stop(
+          call. = FALSE,
+          "Cannot load the sodium package, please make sure that its ",
+          "system libraries are installed.\n",
+          "On Debian and Ubuntu systems you probably need the ",
+          "'libsodium23' package.\n",
+          "On Fedora, CentOS, RedHat and other RPM systems you need the ",
+          "libsodium package. \n",
+          "Error: ", conditionMessage(err)
+        )
+      } else {
+        stop(
+          call. = FALSE,
+          "Cannot load the sodium package, please make sure that its ",
+          "system libraries are installed. \n",
+          "Error: ", conditionMessage(err)
+        )
+      }
+    }
+  )
 }

@@ -46,8 +46,9 @@ backend_secret_service <- R6Class(
       b_ss_get(self, private, service, username, keyring),
     get_raw = function(service, username = NULL, keyring = NULL)
       b_ss_get_raw(self, private, service, username, keyring),
-    set = function(service, username = NULL, keyring = NULL)
-      b_ss_set(self, private, service, username, keyring),
+    set = function(service, username = NULL, keyring = NULL,
+                   prompt = "Password: ")
+      b_ss_set(self, private, service, username, keyring, prompt),
     set_with_value = function(service, username = NULL, password = NULL,
       keyring = NULL)
       b_ss_set_with_value(self, private, service, username, password,
@@ -61,8 +62,8 @@ backend_secret_service <- R6Class(
     list = function(service = NULL, keyring = NULL)
       b_ss_list(self, private, service, keyring),
 
-    keyring_create = function(keyring)
-      b_ss_keyring_create(self, private, keyring),
+    keyring_create = function(keyring, password = NULL)
+      b_ss_keyring_create(self, private, keyring, password),
     keyring_list = function()
       b_ss_keyring_list(self, private),
     keyring_delete = function(keyring = NULL)
@@ -115,9 +116,10 @@ b_ss_get_raw <- function(self, private, service, username, keyring) {
   res
 }
 
-b_ss_set <- function(self, private, service, username, keyring) {
+b_ss_set <- function(self, private, service, username, keyring, prompt) {
   username <- username %||% getOption("keyring_username")
-  password <- get_pass()
+  password <- get_pass(prompt)
+  if (is.null(password)) stop("Aborted setting keyring key")
   b_ss_set_with_value(self, private, service, username, password, keyring)
   invisible(self)
 }
@@ -157,8 +159,9 @@ b_ss_list <- function(self, private, service, keyring) {
   )
 }
 
-b_ss_keyring_create <- function(self, private, keyring) {
-  password <- get_pass()
+b_ss_keyring_create <- function(self, private, keyring, password) {
+  password <- password %||% get_pass()
+  if (is.null(password)) stop("Aborted creating keyring")
   private$keyring_create_direct(keyring, password)
   invisible(self)
 }

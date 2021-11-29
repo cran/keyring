@@ -114,6 +114,7 @@ b_wincred_unlock_keyring_internal <- function(keyring, password = NULL) {
     if (is.null(password)) {
       message("keyring ", sQuote(keyring), " is locked, enter password to unlock")
       password <- get_pass()
+      if (is.null(password)) stop("Aborted unlocking keyring")
     }
     aes <- openssl::sha256(charToRaw(password), key = keyring_data$Salt)
     verify <- b_wincred_get_encrypted_aes(keyring_data$Verify)
@@ -171,8 +172,9 @@ backend_wincred <- R6Class(
       b_wincred_get(self, private, service, username, keyring),
     get_raw = function(service, username = NULL, keyring = NULL)
       b_wincred_get_raw(self, private, service, username, keyring),
-    set = function(service, username = NULL, keyring = NULL)
-      b_wincred_set(self, private, service, username, keyring),
+    set = function(service, username = NULL, keyring = NULL,
+                   prompt = "Password: ")
+      b_wincred_set(self, private, service, username, keyring, prompt),
     set_with_value = function(service, username = NULL, password = NULL,
       keyring = NULL)
       b_wincred_set_with_value(self, private, service, username, password,
@@ -186,8 +188,8 @@ backend_wincred <- R6Class(
     list = function(service = NULL, keyring = NULL)
       b_wincred_list(self, private, service, keyring),
 
-    keyring_create = function(keyring)
-      b_wincred_keyring_create(self, private, keyring),
+    keyring_create = function(keyring, password = NULL)
+      b_wincred_keyring_create(self, private, keyring, password),
     keyring_list = function()
       b_wincred_keyring_list(self, private),
     keyring_delete = function(keyring = NULL)
@@ -305,8 +307,9 @@ b_wincred_decode_auto <- function(password) {
   }
 }
 
-b_wincred_set <- function(self, private, service, username, keyring) {
-  password <- get_pass()
+b_wincred_set <- function(self, private, service, username, keyring, prompt) {
+  password <- get_pass(prompt)
+  if (is.null(password)) stop("Aborted setting keyring key")
   b_wincred_set_with_value(self, private, service, username, password,
                            keyring)
   invisible(self)
@@ -397,8 +400,9 @@ b_wincred_list <- function(self, private, service, keyring) {
   )
 }
 
-b_wincred_keyring_create <- function(self, private, keyring) {
-  password <- get_pass()
+b_wincred_keyring_create <- function(self, private, keyring, password) {
+  password <- password %||% get_pass()
+  if (is.null(password)) stop("Aborted craeting keyring")
   private$keyring_create_direct(keyring, password)
   invisible(self)
 }
@@ -502,6 +506,7 @@ b_wincred_keyring_unlock <- function(self, private, keyring,
                                      password = NULL) {
   keyring <- keyring %||% private$keyring
   if (is.null(password)) password <- get_pass()
+  if (is.null(password)) stop("Aborted unlocking keyring")
   if (!is.null(keyring)) {
     b_wincred_unlock_keyring_internal(keyring, password)
   }

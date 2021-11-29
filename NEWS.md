@@ -1,4 +1,14 @@
 
+# keyring 1.3.0
+
+* `keyring_create()` and also all backends that support multiple keyrings
+  now allow passing the password when creating a new keyring (#114).
+
+* `key_set()` can now use a custom prompt (@pnacht, #112).
+
+* keyring now handled better the 'Cancel' button when requesting a password
+  in RStudio, and an error is thrown in this case (#106).
+
 # keyring 1.2.0
 
 * It is now possible to specify the encoding of secrets on Windows
