@@ -1,7 +1,7 @@
-6c37a766fd4ea30c580cf94d53d9bc11 *DESCRIPTION
+84b2b700a2cf4e502390ed8444529f71 *DESCRIPTION
 861402e081b774b5ea5f27d861c6ba94 *LICENSE
 00556c6e3c95c8dcb180c6b8e6fb6933 *NAMESPACE
-ef0c3533957f2d6a79246e760f1412b9 *NEWS.md
+138d0201e7d3ec12594e2692d332b27f *NEWS.md
 c0cf6c05e436a4ec02fb40f47615a41d *R/api.R
 b5b7709c210f707ace72fa0381c4bf46 *R/assertions.R
 c542cba2540a1736cdcf97d31e2ffde1 *R/backend-class.R
@@ -14,7 +14,7 @@ dcdf9ad591fd25f08c2e80897a5ab14a *R/default_backend.R
 38baf7dae344a876416a6b077ee33ad4 *R/package.R
 3b218c5cb6c9fbf2a13ccd30f182c57a *R/pass.R
 29f3016c1e412fd3862086fa5892d155 *R/utils.R
-1a0092a506131f85403fe27079b84106 *README.md
+771c22a19bd13ceb34a2c704ea16987f *README.md
 548930783cfb34e0ebe65c1b3dbdc706 *cleanup
 e0b781edc0824c2440ce9038d125f5c5 *configure
 68b329da9893e34099c7d8ad5cb9c940 *configure.win
@@ -36,10 +36,10 @@ bf1451d1e551d3f771ad7efeb319c50c *man/backend_env.Rd
 f96a36031ae833605f9d25c561712f21 *man/keyring-package.Rd
 68b329da9893e34099c7d8ad5cb9c940 *src/Makevars.in
 d41d8cd98f00b204e9800998ecf8427e *src/Makevars.win
-8f69c386edc4c3e9bc2ece05bffb106b *src/init.c
-a216c3f684686675b748cf4f167832d6 *src/keyring_macos.c
-636f093d8c9945a863ecb819b99782e8 *src/keyring_secret_service.c
-2ed94040670837c68870ea32e806527a *src/keyring_wincred.c
+5ec155074ec9a440304b8f9555c7da28 *src/init.c
+fd01390e9fe19482453d9ef15ee8b607 *src/keyring_macos.c
+fdf7706eafe96588013b822bb42dfbf6 *src/keyring_secret_service.c
+26bcbdde4c9090fd184fe4b0bc62730a *src/keyring_wincred.c
 c271a01509f3b47c638e48fe545511e2 *tests/testthat.R
 ae825f5129036efff1a1298ffdbd2a84 *tests/testthat/helper.R
 a9dffdff6cae5abcecbccad7565768e3 *tests/testthat/test-common.R

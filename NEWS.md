@@ -1,3 +1,6 @@
+# keyring 1.3.1
+
+* No user visible changes.
 
 # keyring 1.3.0
 
