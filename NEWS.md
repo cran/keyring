@@ -1,3 +1,7 @@
+# keyring 1.4.1
+
+* keyring now compiles on FreeBSD, OpenBSD, NetSBD and DragonFlyBSD.
+
 # keyring 1.4.0
 
 * Now the "file" backend will only be selected as the default backend

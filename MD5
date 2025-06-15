@@ -1,7 +1,7 @@
-4e6929bdb0ca748a44a20f824edda59c *DESCRIPTION
+010881b3ca075539f26e223a9ce29956 *DESCRIPTION
 69034a2e8033c09d0549ca014228cd9d *LICENSE
 886e52302102e590d25e29067b71d828 *NAMESPACE
-65ad8eb9b4ca86ac7ee347082921bbc7 *NEWS.md
+b7fc6997bf03e1e8f9e41f81ea51bfa0 *NEWS.md
 956efe9bf70f88d7c23a7329dee6fe83 *R/aaa-import-standalone-rstudio-detect.R
 49d54631191c0bae643fdc88eb570a69 *R/aaassertthat.R
 4ba5daea0f1ab5a6924b5334f22cbfcc *R/api.R
@@ -23,7 +23,7 @@ de7ba4357e86d12fb1aee2e7d3b24af7 *R/rappdirs.R
 1f452fb4d86418549a29ebcc547c1694 *R/utils.R
 2e64ae1aca08ec4e24f30b4970f0f4dd *README.md
 548930783cfb34e0ebe65c1b3dbdc706 *cleanup
-939cc0f7e222e08b8097f63f74aab0d0 *configure
+b1b66771f2d6ce31189a13c7b29be46e *configure
 9200cbd4e54f788b26db9f03228bc345 *configure.win
 313b04e7356cf89ad887125dcbb0adac *inst/COPYRIGHTS
 d7547609ac71a99ddc3e9b8c98e3652e *inst/development-notes.md
@@ -111,7 +111,7 @@ cb45e53480fb3ab352f622ae89ed6d1b *src/poly1305_donna32.h
 dcdf99ac83263ab20d38837a00e9abd2 *src/psa/crypto_adjust_config_key_pair_types.h
 956cb2b4cc4de1ad0182fa6340c6970b *src/psa/crypto_adjust_config_synonyms.h
 667c8b49b0342f33e09a132ce0eb939b *src/psa/crypto_legacy.h
-e4545a81f2eb97ef8f934e4775137a1a *src/raes.c
+6e40ceae9aaeb57de95e1e41af6699c5 *src/raes.c
 9948bc07a2f564b44b268816efedb970 *src/randombytes_sysrandom.c
 54aa624387f86f59eff85a5387040821 *src/salsa20_ref.c
 f0f3968483dfcf8ca613b56c359a2a6a *src/salsa20_ref.h
